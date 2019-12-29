@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF" monitorInterval="30">
+	<!-- Test -->
+	<Properties>
+        <Property name="DETAIL_LOG_NAME">mst</Property>
+        <Property name="ERROR_LOG_NAME">mst-error</Property>
+        <Property name="LOG_HOME">/tmp/log</Property>
+    </Properties>
+      
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %class{36}#%M [line:%L] - %msg%xEx%n" />
+		</Console>
+
+		<RollingFile name="detailLog" filename="${LOG_HOME}/info/${DETAIL_LOG_NAME}.log" filepattern="${LOG_HOME}/info/${DETAIL_LOG_NAME}-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %class{36}#%M [line:%L] - %msg%xEx%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+		<RollingFile name="errorLog" fileName="${LOG_HOME}/err/${ERROR_LOG_NAME}.log" filePattern="${LOG_HOME}/err/${ERROR_LOG_NAME}.%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %class{36}#%M [line:%L] - %msg%xEx%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="springboot.test.mst" level="debug" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="detailLog" />
+		</Logger>
+		
+		<Root level="info">
+			<AppenderRef ref="console" level="info"/><!--部署到服务器上时要注释掉 -->
+			<AppenderRef ref="detailLog" level="info"/>
+			<AppenderRef ref="errorLog" level="error"/> 
+		</Root>
+		
+	</Loggers>
+</Configuration>
